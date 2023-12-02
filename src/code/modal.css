@@ -1,0 +1,255 @@
+/*
+
+.-modal > [tabindex='0'] > (content here)
+.-modal.unpacked (js)
+
+.-modal:where(.center, .top, .bottom, .left, .right)
+.-modal:where(.center, .top, .bottom, .left, .right).important
+
+.-modal:where(.top, .bottom)
+{ width: INT;
+  --h: INT || var(--scrollHeight); }
+
+.-modal:where(.left, .right)
+{ --w: INT;
+  height: INT; }
+
+.-modal:where(.centr)
+{ width: INT;
+  height: INT; }
+
+*/
+
+:root
+{
+  --modal-backdrop-color: #0006;
+  --modal-bg-color: #fffd;
+  --modal-color: #111;
+  --modal-focus-color: #fff;
+  --modal-border-color: #fff;
+}
+
+:root.dark
+{
+  --modal-backdrop-color: #000c;
+  --modal-bg-color: #222d;
+  --modal-color: #eee;
+  --modal-focus-color: #777;
+  --modal-border-color: #444;
+}
+
+
+
+html:has(.-modal[open])
+{ overflow: hidden;
+  scrollbar-gutter: stable; }
+
+
+
+.-modals
+{ --gutter: 20px;
+  pointer-events: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100dvw;
+  height: 100dvh;
+  background-color: #0000; }
+
+
+.-modals:has(.-modal[open])
+{ pointer-events: all;
+  background-color: var(--modal-backdrop-color);
+  backdrop-filter: blur(0px); }
+.-modals.has-open-in-ff
+{ pointer-events: all;
+  background-color: var(--modal-backdrop-color);
+  backdrop-filter: blur(0px); }
+
+
+
+.-modal
+{ display: flex;
+  flex-direction: column;
+  visibility: hidden;
+  overflow: visible;
+  border: none;
+  border-radius: 3px;
+  max-width: calc(100% - calc(var(--gutter) * 2) - var(--odd-w-px, 0px));
+  max-height: calc(100% - calc(var(--gutter) * 2) - var(--odd-h-px, 0px));
+  position: fixed;
+  inset: auto;
+  background-color: var(--modal-bg-color);
+  color: var(--modal-color);
+  border: 1px solid var(--modal-border-color); }
+
+.-modal[open]
+{ visibility: visible; }
+
+
+.-modal::backdrop
+{ display: none; }
+
+
+
+.-modal > div
+{ overflow: auto;
+  padding: var(--base-size);
+  height: 100%; }
+
+.-modal > [tabindex='0']:focus-visible
+{ --focus-color: var(--modal-focus-color);
+  outline-offset: 3px; }
+
+
+
+
+
+.-modal.center
+{ width: 640px;
+  height: auto;
+  inset: 50% auto auto 50%;
+  translate: -50% -50%; }
+
+
+
+.-modal:where(.left, .right)
+{ --w: 640px;
+  width: var(--w);
+  height: auto;
+  translate: 0 -50%; }
+
+.-modal.left
+{ inset: 50% auto auto var(--gutter); }
+
+.-modal.right
+{ inset: 50% var(--gutter) auto auto; }
+
+
+
+.-modal:where(.bottom, .top)
+{ --h: var(--scrollHeight, min(240px, 50dvh));
+  width: 640px;
+  height: var(--h);
+  translate: -50% 0; }
+
+.-modal.top
+{ inset: var(--gutter) auto auto 50%; }
+
+.-modal.bottom
+{ inset: auto auto var(--gutter) 50%; }
+
+
+
+@media (prefers-reduced-motion: no-preference)
+{
+  .-modals
+  { transition-property: background-color, backdrop-filter;
+    transition-duration: 300ms;
+    transition-timing-function: linear; }
+
+
+
+  .-modal
+  { transition-timing-function: ease-out; }
+
+
+  .-modal.center
+  { transition-property: visibility, opacity;
+    transition-duration: 200ms; }
+
+
+  .-modal.center:not([open])
+  { opacity: 0; }
+
+
+  .-modal.center[open]
+  { opacity: 1; }
+
+
+
+  .-modal:where(.left, .right, .bottom, .top)
+  { transition-property: visibility, inset;
+    transition-duration: 300ms; }
+
+
+
+  .-modal.left:not([open])
+  { inset: 50% auto auto calc(-5px - min(var(--w), calc(100dvw - var(--gutter)))); }
+
+
+  .-modal.right:not([open])
+  { inset: 50% calc(-5px - min(var(--w), calc(100dvw - var(--gutter)))) auto auto; }
+
+
+
+  .-modal.top:not([open])
+  { inset: calc(-5px - min(var(--h), calc(100dvh - var(--gutter)))) auto auto 50%; }
+
+
+  .-modal.bottom:not([open])
+  { inset: auto auto calc(-5px - min(var(--h), calc(100dvh - var(--gutter)))) 50%; }
+}
+
+
+/* Covered modals */
+
+@media (prefers-reduced-motion: reduce)
+{
+  .-modal.unpacked:where(.center, .left, .right, .bottom, .top):has(~ .-modal[open])
+  { opacity: 0; }
+}
+
+
+
+@media (prefers-reduced-motion: no-preference)
+{
+  .-modal.unpacked.center[open]:has(~ .-modal[open])
+  { opacity: 0; }
+
+
+
+  .-modal.unpacked.left[open]:has(~ .-modal[open])
+  { inset: 50% auto auto calc(-5px - min(var(--w), calc(100dvw - var(--gutter)))); }
+
+
+  .-modal.unpacked.right[open]:has(~ .-modal[open])
+  { inset: 50% calc(-5px - min(var(--w), calc(100dvw - var(--gutter)))) auto auto; }
+
+
+
+  .-modal.unpacked.top[open]:has(~ .-modal[open])
+  { inset: calc(-5px - min(var(--h), calc(100dvh - var(--gutter)))) auto auto 50%; }
+
+
+  .-modal.unpacked.bottom[open]:has(~ .-modal[open])
+  { inset: auto auto calc(-5px - min(var(--h), calc(100dvh - var(--gutter)))) 50%; }
+}
+
+
+
+
+@media (prefers-reduced-motion: no-preference)
+{
+  .-modal.unpacked:where(.left, .right, .bottom, .top)
+  { transition-property: visibility, inset, scale, filter; }
+
+  /* .-modal.unpacked.left[open]:has(~ .-modal[open])
+  { inset: 50% auto auto calc(100% - min(var(--w), calc(100dvw - var(--gutter))));
+    scale: 0.5; } */
+
+  .-modal.unpacked.left[open]:has(~ .-modal[open])
+  { inset: 50% auto auto calc(100% - min(var(--w), calc(100dvw - var(--gutter))));
+    scale: 0.5;
+    filter: blur(3px); }
+
+
+
+  /* .-modal.unpacked.left[open]:has( + .-modal[open])
+  { left: var(--gutter);
+    scale: 0.5; }
+
+  .-modal.unpacked.right[open]:has( + .-modal[open])
+  { right: var(--gutter);
+    scale: 0.5; } */
+}
