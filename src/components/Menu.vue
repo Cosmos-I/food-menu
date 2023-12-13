@@ -121,7 +121,7 @@ function inAccepted (s)
     <p v-if='!foods'>Loading…</p>
     <ul v-else class='-food-list'>
       <template v-for='item in foods' :key='item.id'>
-        <li v-if='inAccepted (item.cat)'>
+        <li v-show='inAccepted (item.cat)'>
           <div class='top'>
             <img :src='"/media/food/" + item.pict' :alt='item.name' loading='lazy'>
             <p class='price-per-one'>{{ item.price }}₽</p>
