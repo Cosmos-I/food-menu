@@ -30,7 +30,7 @@ export var newsOpen = ref (0)
 
 export async function fetchNews ()
 {
-  var data = await fetch ('/json/news.json', {method: 'POST'})
+  var data = await fetch ('./json/news.json', {method: 'POST'})
   var news = await data.json ()
   await time (1000)
   return news
@@ -39,7 +39,7 @@ export async function fetchNews ()
 export var foods = ref (0)
 export async function fetchFoods ()
 {
-  var data = await fetch ('/json/food.json', {method: 'POST'})
+  var data = await fetch ('./json/food.json', {method: 'POST'})
   var foods = await data.json ()
   await time (1000)
   return foods
